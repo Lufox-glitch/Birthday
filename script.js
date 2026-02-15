@@ -1,7 +1,7 @@
 // Update countdown timer
 function updateCountdown() {
     // Set her birthday date here (change YYYY-MM-DD to her actual birthday)
-    const birthdayDate = new Date('2027-02-20').getTime();
+    const birthdayDate = new Date('2026-02-20').getTime();
 
     const now = new Date().getTime();
     const distance = birthdayDate - now;
