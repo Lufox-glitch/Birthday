@@ -41,8 +41,9 @@
                     <span>🔊</span>
                     <input type="range" id="volume-control" min="0" max="100" value="70">
                 </div>
-                <audio id="bgm" preload="metadata" loop>
-                    <source src="https://pagalworld.ph/files/download/id/26524" type="audio/mpeg">
+                <audio id="bgm" preload="metadata" crossorigin="anonymous">
+                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
                 </audio>
             </div>
 
@@ -205,35 +206,34 @@
                 </div>
             </section>
 
-            <!-- Social Share Buttons -->
-            <section class="share-section">
-                <h2>Share the Love 💕</h2>
-                <div class="share-buttons">
-                    <button class="share-btn whatsapp" onclick="shareOnWhatsapp()">
-                        <span>💬</span> WhatsApp
-                    </button>
-                    <button class="share-btn instagram" onclick="shareOnInstagram()">
-                        <span>📷</span> Instagram
-                    </button>
-                    <button class="share-btn facebook" onclick="shareOnFacebook()">
-                        <span>👍</span> Facebook
-                    </button>
-                    <button class="share-btn twitter" onclick="shareOnTwitter()">
-                        <span>🐦</span> Twitter
-                    </button>
-                </div>
-            </section>
-
-            <!-- Guest Book Section -->
-            <section class="guestbook-section">
-                <h2>Birthday Wishes 🎊</h2>
-                <div class="guestbook-input">
-                    <input type="text" id="guest-name" placeholder="Your Name">
-                    <textarea id="guest-message" placeholder="Write your birthday wish..."></textarea>
-                    <button onclick="addWish()">Add Wish</button>
-                </div>
-                <div class="wishes-container" id="wishes-container">
-                    <p class="no-wishes">No wishes yet. Be the first to leave one! 🎉</p>
+            <!-- Timeline Section -->
+            <section class="timeline-section">
+                <h2>Our Special Moments �</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">First Meeting</div>
+                        <div class="timeline-content">
+                            <p>The day everything changed...</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">First Date</div>
+                        <div class="timeline-content">
+                            <p>A moment I'll cherish forever</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">I Fell in Love</div>
+                        <div class="timeline-content">
+                            <p>The moment my heart was completely yours</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Today 🎂</div>
+                        <div class="timeline-content">
+                            <p>Celebrating the most amazing person alive!</p>
+                        </div>
+                    </div>
                 </div>
             </section>
 

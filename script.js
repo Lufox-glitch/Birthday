@@ -144,86 +144,93 @@ function createSparkles(x, y) {
 }
 
 // ===== MUSIC PLAYER =====
-const bgm = document.getElementById('bgm');
-const playPauseBtn = document.getElementById('play-pause-btn');
-const prevBtn = document.getElementById('prev-btn');
-const nextBtn = document.getElementById('next-btn');
-const progressBar = document.getElementById('progress-bar');
-const volumeControl = document.getElementById('volume-control');
-const currentTimeEl = document.getElementById('current-time');
-const durationEl = document.getElementById('duration');
+document.addEventListener('DOMContentLoaded', function() {
+    const bgm = document.getElementById('bgm');
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const progressBar = document.getElementById('progress-bar');
+    const volumeControl = document.getElementById('volume-control');
+    const currentTimeEl = document.getElementById('current-time');
+    const durationEl = document.getElementById('duration');
 
-let isPlaying = false;
+    let isPlaying = false;
 
-// Play/Pause button
-playPauseBtn.addEventListener('click', function() {
-    if (isPlaying) {
-        bgm.pause();
-        playPauseBtn.textContent = '▶️';
-        isPlaying = false;
-    } else {
+    if (!bgm || !playPauseBtn) {
+        console.log('Audio elements not found');
+        return;
+    }
+
+    // Play/Pause button
+    playPauseBtn.addEventListener('click', function() {
+        if (isPlaying) {
+            bgm.pause();
+            playPauseBtn.textContent = '▶️';
+            isPlaying = false;
+        } else {
+            bgm.play().catch(e => console.log('Audio play failed:', e));
+            playPauseBtn.textContent = '⏸️';
+            isPlaying = true;
+        }
+    });
+
+    // Update progress bar as music plays
+    bgm.addEventListener('timeupdate', function() {
+        if (bgm.duration) {
+            const percent = (bgm.currentTime / bgm.duration) * 100;
+            progressBar.value = percent;
+            currentTimeEl.textContent = formatTime(bgm.currentTime);
+        }
+    });
+
+    // Update duration when metadata loads
+    bgm.addEventListener('loadedmetadata', function() {
+        durationEl.textContent = formatTime(bgm.duration);
+    });
+
+    // Seek through the song
+    progressBar.addEventListener('input', function() {
+        if (bgm.duration) {
+            bgm.currentTime = (this.value / 100) * bgm.duration;
+        }
+    });
+
+    // Volume control
+    volumeControl.addEventListener('input', function() {
+        bgm.volume = this.value / 100;
+    });
+
+    // Format time helper
+    function formatTime(seconds) {
+        if (!seconds || isNaN(seconds)) return '0:00';
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    // Next button (restart song)
+    nextBtn.addEventListener('click', function() {
+        bgm.currentTime = 0;
         bgm.play().catch(e => console.log('Audio play failed'));
         playPauseBtn.textContent = '⏸️';
         isPlaying = true;
-    }
+    });
+
+    // Previous button (restart from beginning)
+    prevBtn.addEventListener('click', function() {
+        bgm.currentTime = 0;
+    });
+
+    // Auto-play when page loads
+    bgm.addEventListener('canplay', function() {
+        bgm.play().catch(e => console.log('Auto-play failed - user interaction required'));
+        playPauseBtn.textContent = '⏸️';
+        isPlaying = true;
+    });
+
+    // Set initial volume
+    bgm.volume = 0.7;
 });
-
-// Update progress bar as music plays
-bgm.addEventListener('timeupdate', function() {
-    if (bgm.duration) {
-        const percent = (bgm.currentTime / bgm.duration) * 100;
-        progressBar.value = percent;
-        currentTimeEl.textContent = formatTime(bgm.currentTime);
-    }
-});
-
-// Update duration when metadata loads
-bgm.addEventListener('loadedmetadata', function() {
-    durationEl.textContent = formatTime(bgm.duration);
-});
-
-// Seek through the song
-progressBar.addEventListener('input', function() {
-    if (bgm.duration) {
-        bgm.currentTime = (this.value / 100) * bgm.duration;
-    }
-});
-
-// Volume control
-volumeControl.addEventListener('input', function() {
-    bgm.volume = this.value / 100;
-});
-
-// Format time helper
-function formatTime(seconds) {
-    if (!seconds || isNaN(seconds)) return '0:00';
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-}
-
-// Next button (restart song)
-nextBtn.addEventListener('click', function() {
-    bgm.currentTime = 0;
-    bgm.play().catch(e => console.log('Audio play failed'));
-    playPauseBtn.textContent = '⏸️';
-    isPlaying = true;
-});
-
-// Previous button (restart from beginning)
-prevBtn.addEventListener('click', function() {
-    bgm.currentTime = 0;
-});
-
-// Auto-play when page loads
-bgm.addEventListener('canplay', function() {
-    bgm.play().catch(e => console.log('Auto-play failed - user interaction required'));
-    playPauseBtn.textContent = '⏸️';
-    isPlaying = true;
-});
-
-// Set initial volume
-bgm.volume = 0.7;
 
 // ===== DARK MODE =====
 const themeToggle = document.getElementById('theme-toggle');
@@ -280,104 +287,26 @@ function prevReason() {
 }
 
 // ===== GUEST BOOK / BIRTHDAY WISHES =====
-function addWish() {
-    const name = document.getElementById('guest-name').value.trim();
-    const message = document.getElementById('guest-message').value.trim();
-
-    if (!name || !message) {
-        alert('Please fill in both name and message!');
-        return;
-    }
-
-    const wishCard = document.createElement('div');
-    wishCard.className = 'wish-card';
-    wishCard.innerHTML = `
-        <div class="wish-name">🎉 ${escapeHtml(name)}</div>
-        <div class="wish-message">${escapeHtml(message)}</div>
-    `;
-
-    const wishesContainer = document.getElementById('wishes-container');
-    const noWishes = wishesContainer.querySelector('.no-wishes');
-    
-    if (noWishes) {
-        noWishes.remove();
-    }
-
-    wishesContainer.appendChild(wishCard);
-
-    // Save to localStorage
-    let wishes = JSON.parse(localStorage.getItem('birthdayWishes') || '[]');
-    wishes.push({ name, message });
-    localStorage.setItem('birthdayWishes', JSON.stringify(wishes));
-
-    // Clear inputs
-    document.getElementById('guest-name').value = '';
-    document.getElementById('guest-message').value = '';
-
-    createConfetti();
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-// Load wishes from localStorage
-function loadWishes() {
-    const wishes = JSON.parse(localStorage.getItem('birthdayWishes') || '[]');
-    const wishesContainer = document.getElementById('wishes-container');
-
-    if (wishes.length === 0) return;
-
-    wishesContainer.innerHTML = '';
-    wishes.forEach(wish => {
-        const wishCard = document.createElement('div');
-        wishCard.className = 'wish-card';
-        wishCard.innerHTML = `
-            <div class="wish-name">🎉 ${escapeHtml(wish.name)}</div>
-            <div class="wish-message">${escapeHtml(wish.message)}</div>
-        `;
-        wishesContainer.appendChild(wishCard);
-    });
-}
-
-// ===== SOCIAL SHARING =====
-function shareOnWhatsapp() {
-    const text = "🎉 Check out this beautiful birthday website I created! 💕";
-    const url = encodeURIComponent(window.location.href);
-    window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
-}
-
-function shareOnInstagram() {
-    alert('Please share this link on your Instagram story/post! 📷');
-}
-
-function shareOnFacebook() {
-    const url = window.location.href;
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
-}
-
-function shareOnTwitter() {
-    const text = "🎉 Check out this amazing birthday website! 💕";
-    const url = encodeURIComponent(window.location.href);
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${url}`, '_blank');
-}
+// (Removed - Feature deleted)
 
 // ===== TITLE INTERACTIVITY =====
-const title = document.getElementById('title');
-let isHappy = false;
+document.addEventListener('DOMContentLoaded', function() {
+    const title = document.getElementById('title');
+    let isHappy = false;
 
-title.addEventListener('click', function() {
-    isHappy = !isHappy;
-    if (isHappy) {
-        this.textContent = '💕 I Love You! 💕';
-        this.style.animation = 'pulse 0.6s ease-out';
-        setTimeout(() => {
-            this.style.animation = '';
-        }, 600);
-    } else {
-        this.textContent = 'Happy Birthday! 🎂';
+    if (title) {
+        title.addEventListener('click', function() {
+            isHappy = !isHappy;
+            if (isHappy) {
+                this.textContent = '💕 I Love You! 💕';
+                this.style.animation = 'pulse 0.6s ease-out';
+                setTimeout(() => {
+                    this.style.animation = '';
+                }, 600);
+            } else {
+                this.textContent = 'Happy Birthday! 🎂';
+            }
+        });
     }
 });
 
@@ -404,7 +333,6 @@ document.addEventListener('DOMContentLoaded', function() {
     updateCountdown();
     setInterval(updateCountdown, 1000);
     createFloatingHearts();
-    loadWishes();
     showReason(0);
 
     // Smooth scroll
