@@ -143,6 +143,23 @@ function createSparkles(x, y) {
     }
 }
 
+// ===== VIDEO PLAYER TOGGLE =====
+function playMusic() {
+    const playerDisplay = document.getElementById('player-display');
+    const videoPlayer = document.getElementById('video-player');
+    
+    if (videoPlayer.style.display === 'none') {
+        // Show video player
+        videoPlayer.style.display = 'block';
+        playerDisplay.style.display = 'none';
+        createSparkles(window.innerWidth / 2, window.innerHeight / 2);
+    } else {
+        // Hide video player
+        videoPlayer.style.display = 'none';
+        playerDisplay.style.display = 'flex';
+    }
+}
+
 // ===== MUSIC PLAYER =====
 document.addEventListener('DOMContentLoaded', function() {
     const bgm = document.getElementById('bgm');
