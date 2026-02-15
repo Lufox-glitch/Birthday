@@ -173,10 +173,109 @@ body {
     border-color: rgba(255, 255, 255, 0.4);
 }
 
+/* Surprise Messages Section */
+.surprise-section {
+    margin: 60px 0;
+    animation: fadeIn 1s ease-out 1.1s both;
+}
+
+.surprise-section h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.surprise-hint {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-bottom: 30px;
+    font-style: italic;
+}
+
+.surprise-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.surprise-box {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 30px;
+    min-height: 150px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.surprise-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.surprise-box:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+    transform: translateY(-8px);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.surprise-box:hover::before {
+    transform: translateX(100%);
+}
+
+.surprise-icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.surprise-box:hover .surprise-icon {
+    transform: scale(1.2) rotate(10deg);
+}
+
+.surprise-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: white;
+    font-weight: 500;
+    transition: all 0.4s ease;
+}
+
+.surprise-text.hidden {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.surprise-box.revealed .surprise-text.hidden {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.surprise-box.revealed .surprise-icon {
+    display: none;
+}
+
 /* Gallery */
 .gallery {
     margin: 60px 0;
-    animation: fadeIn 1s ease-out 1.2s both;
+    animation: fadeIn 1s ease-out 1.3s both;
 }
 
 .gallery h2 {
