@@ -1,13 +1,10 @@
-// Update countdown timer
+// ===== COUNTDOWN TIMER =====
 function updateCountdown() {
-    // Set her birthday date here (change YYYY-MM-DD to her actual birthday)
     const birthdayDate = new Date('2026-02-20').getTime();
-
     const now = new Date().getTime();
     const distance = birthdayDate - now;
 
     if (distance < 0) {
-        // Birthday has passed
         document.getElementById('days').textContent = '0';
         document.getElementById('hours').textContent = '0';
         document.getElementById('minutes').textContent = '0';
@@ -27,7 +24,7 @@ function updateCountdown() {
     document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
 }
 
-// Confetti animation
+// ===== CONFETTI EFFECTS =====
 function celebrateClick() {
     createConfetti();
     playSound();
@@ -59,39 +56,9 @@ function createConfetti() {
     }
 }
 
-function playSound() {
-    // Create a simple beep sound using Web Audio API
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-
-    oscillator.frequency.value = 800;
-    oscillator.type = 'sine';
-
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.5);
-}
-
-// Surprise message reveal function
-function revealMessage(element) {
-    if (element.classList.contains('revealed')) {
-        element.classList.remove('revealed');
-    } else {
-        element.classList.add('revealed');
-        createSmallConfetti(element);
-    }
-}
-
-// Create small confetti for surprise reveals
 function createSmallConfetti(element) {
     const rect = element.getBoundingClientRect();
-    const colors = ['#ff6b6b', '#ffd93d', '#6bcf7f', '#667eea', '#764ba2', '#ff9a56'];
+    const confettiColors = ['#ff6b6b', '#ffd93d', '#6bcf7f', '#667eea', '#764ba2', '#ff9a56'];
     
     for (let i = 0; i < 8; i++) {
         const confettiPiece = document.createElement('div');
@@ -102,7 +69,7 @@ function createSmallConfetti(element) {
         
         confettiPiece.style.left = rect.left + rect.width / 2 + 'px';
         confettiPiece.style.top = rect.top + 'px';
-        confettiPiece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confettiPiece.style.backgroundColor = confettiColors[Math.floor(Math.random() * confettiColors.length)];
         confettiPiece.style.setProperty('--tx', x + 'px');
         confettiPiece.style.setProperty('--ty', y + 'px');
         confettiPiece.style.animation = `confettiFall 2s ease-out forwards`;
@@ -114,7 +81,290 @@ function createSmallConfetti(element) {
     }
 }
 
-// Add some interactivity to title
+function playSound() {
+    try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.5);
+    } catch (e) {
+        console.log('Audio not available');
+    }
+}
+
+// ===== FLOATING HEARTS AND SPARKLES =====
+function createFloatingHearts() {
+    const heartEmojis = ['❤️', '💕', '💖', '💗', '💝'];
+    const container = document.getElementById('hearts-container');
+    
+    setInterval(() => {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+        
+        const left = Math.random() * 100;
+        const delay = Math.random() * 2;
+        
+        heart.style.left = left + '%';
+        heart.style.animationDelay = delay + 's';
+        
+        container.appendChild(heart);
+        
+        setTimeout(() => heart.remove(), 9000);
+    }, 800);
+}
+
+function createSparkles(x, y) {
+    const sparkleEmojis = ['✨', '⭐', '🌟', '💫'];
+    const container = document.getElementById('sparkles-container');
+    
+    for (let i = 0; i < 5; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.textContent = sparkleEmojis[Math.floor(Math.random() * sparkleEmojis.length)];
+        
+        sparkle.style.left = x + 'px';
+        sparkle.style.top = y + 'px';
+        
+        container.appendChild(sparkle);
+        
+        setTimeout(() => sparkle.remove(), 1500);
+    }
+}
+
+// ===== MUSIC PLAYER =====
+const bgm = document.getElementById('bgm');
+const playPauseBtn = document.getElementById('play-pause-btn');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const progressBar = document.getElementById('progress-bar');
+const volumeControl = document.getElementById('volume-control');
+const currentTimeEl = document.getElementById('current-time');
+const durationEl = document.getElementById('duration');
+
+let isPlaying = false;
+
+// Play/Pause button
+playPauseBtn.addEventListener('click', function() {
+    if (isPlaying) {
+        bgm.pause();
+        playPauseBtn.textContent = '▶️';
+        isPlaying = false;
+    } else {
+        bgm.play().catch(e => console.log('Audio play failed'));
+        playPauseBtn.textContent = '⏸️';
+        isPlaying = true;
+    }
+});
+
+// Update progress bar as music plays
+bgm.addEventListener('timeupdate', function() {
+    if (bgm.duration) {
+        const percent = (bgm.currentTime / bgm.duration) * 100;
+        progressBar.value = percent;
+        currentTimeEl.textContent = formatTime(bgm.currentTime);
+    }
+});
+
+// Update duration when metadata loads
+bgm.addEventListener('loadedmetadata', function() {
+    durationEl.textContent = formatTime(bgm.duration);
+});
+
+// Seek through the song
+progressBar.addEventListener('input', function() {
+    if (bgm.duration) {
+        bgm.currentTime = (this.value / 100) * bgm.duration;
+    }
+});
+
+// Volume control
+volumeControl.addEventListener('input', function() {
+    bgm.volume = this.value / 100;
+});
+
+// Format time helper
+function formatTime(seconds) {
+    if (!seconds || isNaN(seconds)) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+}
+
+// Next button (restart song)
+nextBtn.addEventListener('click', function() {
+    bgm.currentTime = 0;
+    bgm.play().catch(e => console.log('Audio play failed'));
+    playPauseBtn.textContent = '⏸️';
+    isPlaying = true;
+});
+
+// Previous button (restart from beginning)
+prevBtn.addEventListener('click', function() {
+    bgm.currentTime = 0;
+});
+
+// Auto-play when page loads
+bgm.addEventListener('canplay', function() {
+    bgm.play().catch(e => console.log('Auto-play failed - user interaction required'));
+    playPauseBtn.textContent = '⏸️';
+    isPlaying = true;
+});
+
+// Set initial volume
+bgm.volume = 0.7;
+
+// ===== DARK MODE =====
+const themeToggle = document.getElementById('theme-toggle');
+let isDarkMode = false;
+
+themeToggle.addEventListener('click', function() {
+    isDarkMode = !isDarkMode;
+    document.body.classList.toggle('dark-mode');
+    themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+    localStorage.setItem('darkMode', isDarkMode);
+});
+
+// Load dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    isDarkMode = true;
+    document.body.classList.add('dark-mode');
+    themeToggle.textContent = '☀️';
+}
+
+// ===== SURPRISE MESSAGES =====
+function revealMessage(element) {
+    if (element.classList.contains('revealed')) {
+        element.classList.remove('revealed');
+    } else {
+        element.classList.add('revealed');
+        createSmallConfetti(element);
+    }
+}
+
+// ===== REASONS CAROUSEL =====
+let currentReasonIndex = 0;
+
+function showReason(index) {
+    const reasonCards = document.querySelectorAll('.reason-card');
+    reasonCards.forEach(card => card.style.display = 'none');
+    
+    if (reasonCards[index]) {
+        reasonCards[index].style.display = 'flex';
+    }
+}
+
+function nextReason() {
+    const reasonCards = document.querySelectorAll('.reason-card');
+    currentReasonIndex = (currentReasonIndex + 1) % reasonCards.length;
+    showReason(currentReasonIndex);
+    createSparkles(window.innerWidth / 2, window.innerHeight / 2);
+}
+
+function prevReason() {
+    const reasonCards = document.querySelectorAll('.reason-card');
+    currentReasonIndex = (currentReasonIndex - 1 + reasonCards.length) % reasonCards.length;
+    showReason(currentReasonIndex);
+    createSparkles(window.innerWidth / 2, window.innerHeight / 2);
+}
+
+// ===== GUEST BOOK / BIRTHDAY WISHES =====
+function addWish() {
+    const name = document.getElementById('guest-name').value.trim();
+    const message = document.getElementById('guest-message').value.trim();
+
+    if (!name || !message) {
+        alert('Please fill in both name and message!');
+        return;
+    }
+
+    const wishCard = document.createElement('div');
+    wishCard.className = 'wish-card';
+    wishCard.innerHTML = `
+        <div class="wish-name">🎉 ${escapeHtml(name)}</div>
+        <div class="wish-message">${escapeHtml(message)}</div>
+    `;
+
+    const wishesContainer = document.getElementById('wishes-container');
+    const noWishes = wishesContainer.querySelector('.no-wishes');
+    
+    if (noWishes) {
+        noWishes.remove();
+    }
+
+    wishesContainer.appendChild(wishCard);
+
+    // Save to localStorage
+    let wishes = JSON.parse(localStorage.getItem('birthdayWishes') || '[]');
+    wishes.push({ name, message });
+    localStorage.setItem('birthdayWishes', JSON.stringify(wishes));
+
+    // Clear inputs
+    document.getElementById('guest-name').value = '';
+    document.getElementById('guest-message').value = '';
+
+    createConfetti();
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Load wishes from localStorage
+function loadWishes() {
+    const wishes = JSON.parse(localStorage.getItem('birthdayWishes') || '[]');
+    const wishesContainer = document.getElementById('wishes-container');
+
+    if (wishes.length === 0) return;
+
+    wishesContainer.innerHTML = '';
+    wishes.forEach(wish => {
+        const wishCard = document.createElement('div');
+        wishCard.className = 'wish-card';
+        wishCard.innerHTML = `
+            <div class="wish-name">🎉 ${escapeHtml(wish.name)}</div>
+            <div class="wish-message">${escapeHtml(wish.message)}</div>
+        `;
+        wishesContainer.appendChild(wishCard);
+    });
+}
+
+// ===== SOCIAL SHARING =====
+function shareOnWhatsapp() {
+    const text = "🎉 Check out this beautiful birthday website I created! 💕";
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
+}
+
+function shareOnInstagram() {
+    alert('Please share this link on your Instagram story/post! 📷');
+}
+
+function shareOnFacebook() {
+    const url = window.location.href;
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+}
+
+function shareOnTwitter() {
+    const text = "🎉 Check out this amazing birthday website! 💕";
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${url}`, '_blank');
+}
+
+// ===== TITLE INTERACTIVITY =====
 const title = document.getElementById('title');
 let isHappy = false;
 
@@ -131,23 +381,32 @@ title.addEventListener('click', function() {
     }
 });
 
-// Add pulse animation
-const style = document.createElement('style');
-
-style.textContent = `
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.1); }
+// Add animations on mouse move over page
+document.addEventListener('mousemove', (e) => {
+    if (Math.random() > 0.98) {
+        createSparkles(e.clientX, e.clientY);
     }
-`;
+});
 
-document.head.appendChild(style);
+// ===== INITIALIZATION =====
+document.addEventListener('DOMContentLoaded', function() {
+    // Add pulse animation styles
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    `;
+    document.head.appendChild(style);
 
-// Initialize countdown on page load
-updateCountdown();
+    // Initialize features
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+    createFloatingHearts();
+    loadWishes();
+    showReason(0);
 
-// Update countdown every second
-setInterval(updateCountdown, 1000);
-
-// Add smooth scroll behavior
-document.documentElement.style.scrollBehavior = 'smooth';
+    // Smooth scroll
+    document.documentElement.style.scrollBehavior = 'smooth';
+});
