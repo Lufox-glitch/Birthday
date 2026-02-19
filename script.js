@@ -1,5 +1,5 @@
 // ===== COUNTDOWN TIMER =====
-ffunction updateCountdown() {
+function updateCountdown() {
     const targetDate = new Date(Date.now() + (60 * 60 * 1000)); // 1 hour from now
     const now = new Date();
     const distance = targetDate - now;
@@ -25,7 +25,7 @@ ffunction updateCountdown() {
     document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
     document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
 }tContent = String(seconds).padStart(2, '0');
-}
+
 
 // ===== CONFETTI EFFECTS =====
 function celebrateClick() {
