@@ -1,6 +1,6 @@
 // ===== COUNTDOWN TIMER =====
 function updateCountdown() {
-    const targetDate = new Date(Date.now() + (60 * 60 * 1000)); // 1 hour from now
+    const targetDate = new Date(2026-02-20T00:00:00() + (60 * 60 * 1000)); // 1 hour from now
     const now = new Date();
     const distance = targetDate - now;
 
