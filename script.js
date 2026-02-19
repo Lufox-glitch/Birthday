@@ -1,6 +1,6 @@
 // ===== COUNTDOWN TIMER =====
 function updateCountdown() {
-    const birthdayDate = new Date('2026-02-20').getTime();
+    const targetDate = new Date(new Date().getTime() + (60 * 60 * 1000));
     const now = new Date().getTime();
     const distance = birthdayDate - now;
 
