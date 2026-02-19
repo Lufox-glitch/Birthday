@@ -1,27 +1,30 @@
 // ===== COUNTDOWN TIMER =====
-function updateCountdown() {
-    const targetDate = new Date(new Date().getTime() + (60 * 60 * 1000));
-    const now = new Date().getTime();
-    const distance = birthdayDate - now;
+ffunction updateCountdown() {
+    const targetDate = new Date(Date.now() + (60 * 60 * 1000)); // 1 hour from now
+    const now = new Date();
+    const distance = targetDate - now;
 
-    if (distance < 0) {
-        document.getElementById('days').textContent = '0';
-        document.getElementById('hours').textContent = '0';
-        document.getElementById('minutes').textContent = '0';
-        document.getElementById('seconds').textContent = '0';
-        document.querySelector('.countdown').innerHTML = '<h2 style="grid-column: 1/-1; color: #ff6b6b; font-size: 2rem;">🎉 Happy Birthday! 🎉</h2>';
+    if (distance <= 0) {
+        document.getElementById('days').textContent = '00';
+        document.getElementById('hours').textContent = '00';
+        document.getElementById('minutes').textContent = '00';
+        document.getElementById('seconds').textContent = '00';
+
+        document.querySelector('.countdown').innerHTML =
+            '<h2 style="grid-column: 1/-1; color:#ff6b6b;">🎬 Time’s Up!</h2>';
         return;
     }
 
     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((distance / (1000 * 60)) % 60);
+    const seconds = Math.floor((distance / 1000) % 60);
 
     document.getElementById('days').textContent = String(days).padStart(2, '0');
     document.getElementById('hours').textContent = String(hours).padStart(2, '0');
     document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
     document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+}tContent = String(seconds).padStart(2, '0');
 }
 
 // ===== CONFETTI EFFECTS =====
