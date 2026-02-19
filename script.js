@@ -1,21 +1,24 @@
 // ===== COUNTDOWN TIMER =====
 function updateCountdown() {
+    // Nepal Time is UTC+5:45
+    // Get current UTC time
+    const nowUTC = new Date();
+    const utcTime = nowUTC.getTime() + (nowUTC.getTimezoneOffset() * 60000);
+    // Add 5 hours 45 minutes in milliseconds
+    const nepalOffsetMs = (5 * 60 + 45) * 60000;
+    const nowNepal = new Date(utcTime + nepalOffsetMs);
 
-    // Nepal midnight 2026-02-20 = 2026-02-19 18:15:00 UTC
-    const targetDate = new Date(Date.UTC(2026, 1, 19, 18, 15, 0));
+    // Set birthday at midnight Nepali time (2026-02-20T00:00:00+05:45)
+    // To get the equivalent UTC time, subtract 5h45m from midnight Nepali time
+    const birthdayNepalUTC = new Date(Date.UTC(2026, 1, 19, 18, 15, 0)); // 2026-02-19 18:15:00 UTC
+    const distance = birthdayNepalUTC.getTime() - nowUTC.getTime();
 
-    const now = new Date();
-    const distance = targetDate - now;
-
-    if (distance <= 0) {
-        document.getElementById('days').textContent = '00';
-        document.getElementById('hours').textContent = '00';
-        document.getElementById('minutes').textContent = '00';
-        document.getElementById('seconds').textContent = '00';
-
-        document.querySelector('.countdown').innerHTML =
-            '<h2 style="grid-column: 1/-1; color:#ff6b6b;">🎉 Happy Birthday! 🎉</h2>';
-
+    if (distance < 0) {
+        document.getElementById('days').textContent = '0';
+        document.getElementById('hours').textContent = '0';
+        document.getElementById('minutes').textContent = '0';
+        document.getElementById('seconds').textContent = '0';
+        document.querySelector('.countdown').innerHTML = '<h2 style="grid-column: 1/-1; color: #ff6b6b; font-size: 2rem;">🎉 Happy Birthday! 🎉</h2>';
         return;
     }
 
