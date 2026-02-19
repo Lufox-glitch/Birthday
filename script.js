@@ -1,8 +1,10 @@
 // ===== COUNTDOWN TIMER =====
 function updateCountdown() {
-    const targetDate = new Date(2026-02-20T00:00:00() + (60 * 60 * 1000)); // 1 hour from now
+    // Target: 2026-02-20 10:00:00 Nepali time (UTC+5:45)
+    // Equivalent UTC: 2026-02-20 04:15:00
+    const targetUTC = new Date(Date.UTC(2026, 1, 20, 4, 15, 0)); // Month is 0-indexed
     const now = new Date();
-    const distance = targetDate - now;
+    const distance = targetUTC - now;
 
     if (distance <= 0) {
         document.getElementById('days').textContent = '00';
