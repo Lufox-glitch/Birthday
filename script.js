@@ -1,17 +1,8 @@
 // ===== COUNTDOWN TIMER =====
 function updateCountdown() {
-    // Nepal Time is UTC+5:45
-    // Get current UTC time
-    const nowUTC = new Date();
-    const utcTime = nowUTC.getTime() + (nowUTC.getTimezoneOffset() * 60000);
-    // Add 5 hours 45 minutes in milliseconds
-    const nepalOffsetMs = (5 * 60 + 45) * 60000;
-    const nowNepal = new Date(utcTime + nepalOffsetMs);
-
-    // Set birthday at midnight Nepali time (2026-02-20T00:00:00+05:45)
-    // To get the equivalent UTC time, subtract 5h45m from midnight Nepali time
-    const birthdayNepalUTC = new Date(Date.UTC(2026, 1, 19, 18, 15, 0)); // 2026-02-19 18:15:00 UTC
-    const distance = birthdayNepalUTC.getTime() - nowUTC.getTime();
+    const birthdayDate = new Date('2026-02-20').getTime();
+    const now = new Date().getTime();
+    const distance = birthdayDate - now;
 
     if (distance < 0) {
         document.getElementById('days').textContent = '0';
