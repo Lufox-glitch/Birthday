@@ -32,6 +32,8 @@ function celebrateClick() {
     createConfetti();
     playSound();
 }
+updateCountdown();
+setInterval(updateCountdown, 1000);
 
 function createConfetti() {
     const confettiContainer = document.getElementById('confetti');
